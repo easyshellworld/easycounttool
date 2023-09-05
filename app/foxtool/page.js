@@ -31,7 +31,7 @@ export default function Home() {
   });
   
   return (
-    <div>
+    <div className="grid grid-cols-0 gap-8 place-content-center">
       <div><label>value:</label><h1>{sum.getval}</h1></div>
       <div><label>count:</label><h1>{sum.count}</h1></div>
       <div><label>50%count:</label><h1>{sum.countt}</h1></div>
@@ -50,7 +50,7 @@ export default function Home() {
             const newdata=getnewdata(val,qian,zhong,hou)
             setSum(newdata)
           }}
-        >sum</button>
+        >Getdata</button>
       </div>
     </div>
   )

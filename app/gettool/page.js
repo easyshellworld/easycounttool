@@ -6,7 +6,7 @@ const getdata=(urlword)=>{
   const today=new Date().getTime()
 		
   const last=Math.floor(today/1000)
-fetch('/currency/kline?com_id='+geturldata.coin+'_usdt&symbol='+geturldata.coin+'&anchor=USDT&time='+last+'&market_id=338&period='+geturldata.day+'&timestamp=1674739035146&code=ebc161c4c01e448626c3cc30518009d6&platform=web_pc&v=1.0.0&language=en_US&legal_currency=USD')
+fetch('/currency/kline?com_id='+urlword+'_usdt&symbol='+urlword+'&anchor=USDT&time='+last+'&market_id=338&period=1d&timestamp=1674739035146&code=ebc161c4c01e448626c3cc30518009d6&platform=web_pc&v=1.0.0&language=en_US&legal_currency=USD')
 .then( res=>res.json() ) 
 .then( data=>{
         // console.log(data.data.kline)
@@ -29,7 +29,7 @@ export default function Home() {
   const [value, onChangeText] = useState('');
   const [sum, setSum] = useState('');
     return (
-      <div>
+      <div className="form-control"> 
       <div><h1>{sum}</h1></div>
       <div><input type="text" placeholder="Type here" className="input input-bordered w-full max-w-xs"   onChange={e => onChangeText(e.target.value)}
           value={value} /></div>
