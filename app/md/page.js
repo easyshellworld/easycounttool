@@ -101,7 +101,7 @@ if(isloading=='start'){
   <div>
     <button className="btn btn-success bg-red-600" onClick={savefile} >save</button>
     <div>
-    <textarea className="textarea w-full h-full mix-h-50 max-w-screen" value={newdata} onChange={e=>setnewdata(e.target.value)}></textarea>
+    <textarea className="textarea w-full h-full min-h-50 max-w-screen" value={newdata} onChange={e=>setnewdata(e.target.value)}></textarea>
     </div>
   </div>
   )
