@@ -31,6 +31,30 @@ exports.decrypt=(encryptedString, key)=> {
   return decryptedString;
 }
 
+exports.encrypt=(inputString, key)=>{
+  const cipher = crypto.createCipher('aes-256-cbc', key);
+  let encryptedString = cipher.update(inputString, 'utf-8', 'hex');
+  encryptedString += cipher.final('hex');
+  return encryptedString;
+}
+
+exports.newsupa=async function(newdata,key){
+  const mysupa='c213804939268a089646e8c89e8146fd25643e03119abda6ee28d938d3db42c61e432e162f839a73c89d9f174269cdf0fb362e6900b64f7c1eafd57fc4a9d291bf168cbb84216bdf9f1f274bc317798651f088bf18a42b4de340b7e75e1b14241e4ccd17c6fa47049ba3df6cb7c93953a59f5f9aaad1107a02a65a27e86d8b2f43948160d784837ded9e71e5f1e379426ebf56ef63fd5c5198429475ee1547cd18c0b78f7d4fac77e8863c4d2f9e6f0eb6fd12b2ed64855b815e9fb882d235666e62d71defaf5c647e387a4971cad4d205edf9069df2a00d2e133afdd6d1b633'        
+  const mykey=exports.decrypt(mysupa,key)
+  const supabase = createClient('https://yqbvqhohbxvvqfbfjpvf.supabase.co', mykey)
+  
+  const newcode=exports.encrypt(newdata,key)
+
+
+  
+const { error } = await supabase
+.from('markdown')
+.update({ test: newcode })
+.eq('id', 1)
+  
+  
+  return 'start'
+}
 
 
 exports.supa=async function(key){

@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react"
 
-import {getdata,getodaydate,supa,toweek,decrypt,getweather} from './com/getdata'
+import {getdata,getodaydate,supa,toweek,decrypt,getweather,newsupa} from './com/getdata'
 
 
 
@@ -29,9 +29,27 @@ export default function Newmarkdown() {
 
     }
 
+    
+
   const [word,setword]=useState()
-  const [isloading,setloading]=useState(false)
+  const [isloading,setloading]=useState("start")
   const [newdata,setnewdata]=useState()
+
+  const changewrite=async ()=>{
+    const mysupadata=await supa(word)
+    const template=decrypt(mysupadata,word)
+    setnewdata(template)
+    
+     setloading('write')
+    
+  }
+
+  const savefile=async ()=>{
+    const teststart=await newsupa(newdata,word)
+   
+    setloading(teststart)
+
+  }
 
   const changepage=async ()=>{
     try {
@@ -47,14 +65,15 @@ export default function Newmarkdown() {
         .replace('$(day)',weekday)
         .replace('$(weather)',myweather)
     setnewdata(formattedTemplate)
-    setloading(true)
+   
     } catch (error) {
       console.log(error)
     }
     
+    setloading('get')
   }
  
-if(isloading==false){
+if(isloading=='start'){
   return (
      <div className='grid grid-cols-0 gap-3 place-content-center'>
     <div>
@@ -65,10 +84,11 @@ if(isloading==false){
     </div>
     </div>
   )
-}else{
+}if(isloading=='get'){
     return (
       <div>
       <button className="btn btn-success" onClick={copyCode} >copy</button>
+      <button className="btn btn-success bg-red-600" onClick={changewrite} >change</button>
       <div>
         <pre>
           {newdata}
@@ -76,6 +96,16 @@ if(isloading==false){
       </div>
       </div>
     )
+} if(isloading=='write'){
+  return (
+  <div>
+    <button className="btn btn-success bg-red-600" onClick={savefile} >save</button>
+    <div>
+    <textarea className="textarea w-full h-full max-h-screen max-w-screen" value={newdata} onChange={e=>setnewdata(e.target.value)}></textarea>
+    </div>
+  </div>
+  )
+
 }
 }
   
