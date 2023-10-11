@@ -4,6 +4,9 @@ publish="public"
      from = "/currency/*"
      to = "https://api.mytokenapi.com/currency/:sqlat"
      status = 200
+     from = "/v2.6/*"
+     to = "https://api.caiyunapp.com/v2.6/:splat"
+     status = 200
     # defaults to 302 
      force = true # COMMENT: ensure that we always redirect
      headers = {"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36" }

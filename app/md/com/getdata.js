@@ -1,10 +1,42 @@
 const axios=require('axios');
 const { createClient } =require('@supabase/supabase-js')
+const crypto =require( 'crypto')
+
+
+exports.getweather=async (key)=>{
+  const arrword = {
+    CLEAR_DAY: '晴（白天）',
+    CLEAR_NIGHT: '晴（夜间）',
+    PARTLY_CLOUDY_DAY: '多云（白天）',
+    PARTLY_CLOUDY_NIGHT: '多云（夜间）',
+    CLOUDY: '阴', LIGHT_HAZE: '轻度雾霾',
+    MODERATE_HAZE: '中度雾霾',
+    HEAVY_HAZE: '重度雾霾', LIGHT_RAIN: '小雨', MODERATE_RAIN: '中雨',
+    HEAVY_RAIN: '大雨', STORM_RAIN: '暴雨', FOG: '雾', LIGHT_SNOW: '小雪', MODERATE_SNOW: '中雪', HEAVY_SNOW: '大雪', STORM_SNOW: '暴雪', DUST: '浮尘', SAND: '沙尘', WIND: '大风'
+  }
+  const n='9a5710f6fbf652e1a85e5963b178e67f34091c4a101e0c24ae01e04f3de2b982c8ebd6e975e0b1ed4c071203e7c1ccb665ce81b72aee3f2ef29b9d47f7398e06';
+  const weburl=exports.decrypt(n,key)
+  const res=await axios({
+    method: 'get',
+    url: weburl,
+  })
+  const today=res.data.result.daily
+  return  arrword[today.skycon_08h_20h[0].value]+'-'+arrword[today.skycon_20h_32h[0].value]+',气温：'+today.temperature[0].min+'-'+today.temperature[0].max+',雨量：'+today.precipitation[0].min+'-'+today.precipitation[0].max+',湿度：'+today.humidity[0].min+'-'+today.humidity[0].max+',云量：'+today.cloudrate[0].avg
+}
+
+exports.decrypt=(encryptedString, key)=> {
+  const decipher = crypto.createDecipher('aes-256-cbc', key);
+  let decryptedString = decipher.update(encryptedString, 'hex', 'utf-8');
+  decryptedString += decipher.final('utf-8');
+  return decryptedString;
+}
 
 
 
 exports.supa=async function(key){
-  const supabase = createClient('https://yqbvqhohbxvvqfbfjpvf.supabase.co', key)
+  const mysupa='c213804939268a089646e8c89e8146fd25643e03119abda6ee28d938d3db42c61e432e162f839a73c89d9f174269cdf0fb362e6900b64f7c1eafd57fc4a9d291bf168cbb84216bdf9f1f274bc317798651f088bf18a42b4de340b7e75e1b14241e4ccd17c6fa47049ba3df6cb7c93953a59f5f9aaad1107a02a65a27e86d8b2f43948160d784837ded9e71e5f1e379426ebf56ef63fd5c5198429475ee1547cd18c0b78f7d4fac77e8863c4d2f9e6f0eb6fd12b2ed64855b815e9fb882d235666e62d71defaf5c647e387a4971cad4d205edf9069df2a00d2e133afdd6d1b633'        
+  const mykey=exports.decrypt(mysupa,key)
+  const supabase = createClient('https://yqbvqhohbxvvqfbfjpvf.supabase.co', mykey)
   
   
   let { data: markdown, error } = await supabase
@@ -27,6 +59,11 @@ exports.getdata=async function(){
    return stockdata+coinprice+foxdata;
    
 }
+
+exports.toweek=()=>{
+  datelist = ['星期日','星期一','星期二','星期三','星期四','星期五','星期六']
+  return datelist[new Date().getDay()];
+  }
 
 
 function timestampToTime(timestamp) {
