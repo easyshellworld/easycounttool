@@ -38,10 +38,18 @@ exports.encrypt=(inputString, key)=>{
   return encryptedString;
 }
 
-exports.newsupa=async function(newdata,key){
+exports.newsupabase=(key)=>{
   const mysupa='c213804939268a089646e8c89e8146fd25643e03119abda6ee28d938d3db42c61e432e162f839a73c89d9f174269cdf0fb362e6900b64f7c1eafd57fc4a9d291bf168cbb84216bdf9f1f274bc317798651f088bf18a42b4de340b7e75e1b14241e4ccd17c6fa47049ba3df6cb7c93953a59f5f9aaad1107a02a65a27e86d8b2f43948160d784837ded9e71e5f1e379426ebf56ef63fd5c5198429475ee1547cd18c0b78f7d4fac77e8863c4d2f9e6f0eb6fd12b2ed64855b815e9fb882d235666e62d71defaf5c647e387a4971cad4d205edf9069df2a00d2e133afdd6d1b633'        
+  const codeurl='960277f01be24c3ec729249975629a55d2f3960387fadead35d67c11ae89e186ed6ea02e50585d2c08ed08c1ff453abd'
   const mykey=exports.decrypt(mysupa,key)
-  const supabase = createClient('https://yqbvqhohbxvvqfbfjpvf.supabase.co', mykey)
+  const url=exports.decrypt(codeurl,key)
+  const supabase = createClient(url, mykey)
+
+  return supabase
+}
+
+exports.newsupa=async function(newdata,key,supabase){
+ 
   
   const newcode=exports.encrypt(newdata,key)
 
@@ -57,11 +65,7 @@ const { error } = await supabase
 }
 
 
-exports.supa=async function(key){
-  const mysupa='c213804939268a089646e8c89e8146fd25643e03119abda6ee28d938d3db42c61e432e162f839a73c89d9f174269cdf0fb362e6900b64f7c1eafd57fc4a9d291bf168cbb84216bdf9f1f274bc317798651f088bf18a42b4de340b7e75e1b14241e4ccd17c6fa47049ba3df6cb7c93953a59f5f9aaad1107a02a65a27e86d8b2f43948160d784837ded9e71e5f1e379426ebf56ef63fd5c5198429475ee1547cd18c0b78f7d4fac77e8863c4d2f9e6f0eb6fd12b2ed64855b815e9fb882d235666e62d71defaf5c647e387a4971cad4d205edf9069df2a00d2e133afdd6d1b633'        
-  const mykey=exports.decrypt(mysupa,key)
-  const supabase = createClient('https://yqbvqhohbxvvqfbfjpvf.supabase.co', mykey)
-  
+exports.supa=async function(supabase){
   
   let { data: markdown, error } = await supabase
     .from('markdown')
