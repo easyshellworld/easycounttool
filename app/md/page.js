@@ -1,7 +1,7 @@
 "use client"
 import { useState } from "react"
 
-import {getdata,getodaydate,supa,toweek,decrypt,getweather,newsupa} from './com/getdata'
+import {getdata,getodaydate,supa,toweek,decrypt,getweather,newsupa,newsupabase} from './com/getdata'
 
 
 
@@ -26,17 +26,21 @@ export default function Newmarkdown() {
 
         // 删除临时元素
         document.body.removeChild(textArea);
+        setnewcolor('bg-blue-600')
+  
 
     }
 
     
 
-  const [word,setword]=useState()
+  const [word,setword]=useState('')
   const [isloading,setloading]=useState("start")
   const [newdata,setnewdata]=useState()
+  const [newbase,setnewbase]=useState(null)
+  const [newcolor,setnewcolor]=useState()
 
   const changewrite=async ()=>{
-    const mysupadata=await supa(word)
+    const mysupadata=await supa(newbase)
     const template=decrypt(mysupadata,word)
     setnewdata(template)
     
@@ -45,7 +49,7 @@ export default function Newmarkdown() {
   }
 
   const savefile=async ()=>{
-    const teststart=await newsupa(newdata,word)
+    const teststart=await newsupa(newdata,word,newbase)
    
     setloading(teststart)
 
@@ -53,7 +57,12 @@ export default function Newmarkdown() {
 
   const changepage=async ()=>{
     try {
-    const mysupadata=await supa(word)
+    let testnewbase=null
+    if(newbase==null){
+      testnewbase=newsupabase(word)
+      setnewbase(testnewbase)
+    } else{testnewbase=newbase}
+    const mysupadata=await supa(testnewbase)
     const myweather=await getweather(word)
     const price=await getdata()
     const date=getodaydate()
@@ -87,7 +96,7 @@ if(isloading=='start'){
 }if(isloading=='get'){
     return (
       <div>
-      <button className="btn btn-success" onClick={copyCode} >copy</button>
+      <button className={`btn btn-success ${newcolor}`} onClick={copyCode} >copy</button>
       <button className="btn btn-success bg-red-600" onClick={changewrite} >change</button>
       <div>
         <pre>
@@ -101,7 +110,7 @@ if(isloading=='start'){
   <div>
     <button className="btn btn-success bg-red-600" onClick={savefile} >save</button>
     <div>
-    <textarea className="textarea w-full h-full max-h-screen max-w-screen" value={newdata} onChange={e=>setnewdata(e.target.value)}></textarea>
+    <textarea className="textarea w-full h-full min-h-screen max-w-screen" value={newdata} onChange={e=>setnewdata(e.target.value)}></textarea>
     </div>
   </div>
   )
