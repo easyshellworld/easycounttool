@@ -96,8 +96,10 @@ if(isloading=='start'){
 }if(isloading=='get'){
     return (
       <div>
+      <div className="w-full max-w-screen flex justify-between">
       <button className={`btn btn-success ${newcolor}`} onClick={copyCode} >copy</button>
       <button className="btn btn-success bg-red-600" onClick={changewrite} >change</button>
+      </div>
       <div>
         <pre>
           {newdata}
