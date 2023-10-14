@@ -21,7 +21,7 @@ exports.getweather=async (key)=>{
     url: weburl,
   })
   const today=res.data.result.daily
-  return  arrword[today.skycon_08h_20h[0].value]+'-'+arrword[today.skycon_20h_32h[0].value]+',气温：'+today.temperature[0].min+'-'+today.temperature[0].max+',雨量：'+today.precipitation[0].min+'-'+today.precipitation[0].max+',湿度：'+today.humidity[0].min+'-'+today.humidity[0].max+',云量：'+today.cloudrate[0].avg+',风向：'+today.wind[0].avg.direction+',风力：'+today.wind[0].min.speed+'-'+today.wind[0].max.speed
+  return  arrword[today.skycon_08h_20h[0].value]+'-'+arrword[today.skycon_20h_32h[0].value]+',气温：'+today.temperature[0].min+'-'+today.temperature[0].max+',雨量：'+today.precipitation[0].min+'-'+today.precipitation[0].max+',湿度：'+today.humidity[0].min+'-'+today.humidity[0].max+',云量：'+today.cloudrate[0].avg+',风向：'+getWindDirection(today.wind[0].avg.direction)+',风力：'+today.wind[0].min.speed+'-'+today.wind[0].max.speed
 }
 
 exports.decrypt=(encryptedString, key)=> {
@@ -223,5 +223,28 @@ async function getfox(){
  // console.log(foxtext)
   return foxtext
 }
+function getWindDirection(angle) {
+    if (angle >= 337.5 || angle < 22.5) {
+        return "北风";
+    } else if (angle >= 22.5 && angle < 67.5) {
+        return "东北风";
+    } else if (angle >= 67.5 && angle < 112.5) {
+        return "东风";
+    } else if (angle >= 112.5 && angle < 157.5) {
+        return "东南风";
+    } else if (angle >= 157.5 && angle < 202.5) {
+        return "南风";
+    } else if (angle >= 202.5 && angle < 247.5) {
+        return "西南风";
+    } else if (angle >= 247.5 && angle < 292.5) {
+        return "西风";
+    } else if (angle >= 292.5 && angle < 337.5) {
+        return "西北风";
+    } else {
+        return "未知风向";
+    }
+}
+
+
 
   
