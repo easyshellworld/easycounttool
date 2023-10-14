@@ -21,7 +21,7 @@ exports.getweather=async (key)=>{
     url: weburl,
   })
   const today=res.data.result.daily
-  return  arrword[today.skycon_08h_20h[0].value]+'-'+arrword[today.skycon_20h_32h[0].value]+',气温：'+today.temperature[0].min+'-'+today.temperature[0].max+',雨量：'+today.precipitation[0].min+'-'+today.precipitation[0].max+',湿度：'+today.humidity[0].min+'-'+today.humidity[0].max+',云量：'+today.cloudrate[0].avg
+  return  arrword[today.skycon_08h_20h[0].value]+'-'+arrword[today.skycon_20h_32h[0].value]+',气温：'+today.temperature[0].min+'-'+today.temperature[0].max+',雨量：'+today.precipitation[0].min+'-'+today.precipitation[0].max+',湿度：'+today.humidity[0].min+'-'+today.humidity[0].max+',云量：'+today.cloudrate[0].avg+',风向：'+today.wind[0].avg.direction+',风力：'+today.wind[0].min.speed+'-'+today.wind[0].max.speed
 }
 
 exports.decrypt=(encryptedString, key)=> {
