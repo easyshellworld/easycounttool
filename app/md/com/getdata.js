@@ -108,28 +108,27 @@ function timestampToTime(timestamp) {
 }
 
 
-async function getcoin(){
-  const coinnames=['btc', 'eth', 'matic665', 'apt530', 'tron', 'solana', 'arb248','ape613']
-  let coinpricetext=''
-  for(let i=0;i<coinnames.length;i++){
-    const res=await axios({
-        method: 'get',
-        url: gettoday(coinnames[i]),
-        
-        headers: {
-          'Content-Type': 'application/json',
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0",
-        }
-      
-    })
-   
-    const price=coinnames[i].match(/.*[a-zA-Z]/)+':'+ res.data.data.kline[0].close + ','
-    coinpricetext=coinpricetext+price 
-    
-  }
+async function getcoin() {
+  const coinnames = ['BTC', 'ETH', 'matic665', 'APT530', 'tron', 'solana', 'ARB248','APE613','OP450','XLM','UNI226'];
+  const coinPromises = coinnames.map((coinName) => {
+      return axios({
+          method: 'get',
+          url: gettoday(coinName),
+          headers: {
+              'Content-Type': 'application/json',
+              "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0",
+          }
+      }).then((res) => {
+          const price = coinName.match(/.*[a-zA-Z]/) + ':' + res.data.data.kline[0].close + ',';
+          return price;
+      });
+  });
 
-  return coinpricetext
+  return Promise.all(coinPromises).then((coinPrices) => {
+      return coinPrices.join(''); // Join the prices into a single string
+  });
 }
+
 
 
 
