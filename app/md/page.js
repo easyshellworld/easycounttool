@@ -62,9 +62,15 @@ export default function Newmarkdown() {
       testnewbase=newsupabase(word)
       setnewbase(testnewbase)
     } else{testnewbase=newbase}
-    const mysupadata=await supa(testnewbase)
+    const [mysupadata,myweather,price] = await Promise.all(
+      [
+       supa(testnewbase),
+       getweather(word),
+       getdata()
+      ]);  
+   /*  const mysupadata=await supa(testnewbase)
     const myweather=await getweather(word)
-    const price=await getdata()
+    const price=await getdata() */
     const date=getodaydate()
     const weekday=toweek()
     const template=decrypt(mysupadata,word)

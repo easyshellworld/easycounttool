@@ -14,6 +14,27 @@ exports.getweather=async (key)=>{
     HEAVY_HAZE: '重度雾霾', LIGHT_RAIN: '小雨', MODERATE_RAIN: '中雨',
     HEAVY_RAIN: '大雨', STORM_RAIN: '暴雨', FOG: '雾', LIGHT_SNOW: '小雪', MODERATE_SNOW: '中雪', HEAVY_SNOW: '大雪', STORM_SNOW: '暴雪', DUST: '浮尘', SAND: '沙尘', WIND: '大风'
   }
+  const getWindDirection=(angle)=>{
+    if (angle >= 337.5 || angle < 22.5) {
+        return "北风";
+    } else if (angle >= 22.5 && angle < 67.5) {
+        return "东北风";
+    } else if (angle >= 67.5 && angle < 112.5) {
+        return "东风";
+    } else if (angle >= 112.5 && angle < 157.5) {
+        return "东南风";
+    } else if (angle >= 157.5 && angle < 202.5) {
+        return "南风";
+    } else if (angle >= 202.5 && angle < 247.5) {
+        return "西南风";
+    } else if (angle >= 247.5 && angle < 292.5) {
+        return "西风";
+    } else if (angle >= 292.5 && angle < 337.5) {
+        return "西北风";
+    } else {
+        return "未知风向";
+    }
+}
   const n='9a5710f6fbf652e1a85e5963b178e67f34091c4a101e0c24ae01e04f3de2b982c8ebd6e975e0b1ed4c071203e7c1ccb665ce81b72aee3f2ef29b9d47f7398e06';
   const weburl=exports.decrypt(n,key)
   const res=await axios({
@@ -81,10 +102,14 @@ exports.getodaydate=()=>{
 }
 
 exports.getdata=async function(){
-   const coinprice=await getcoin()
-   const stockdata =await getstock();
-   const foxdata=await getfox();
-   return stockdata+coinprice+foxdata;
+  const [coinprice,stockdata,foxdata] = await Promise.all(
+    [
+     getcoin(),
+     getstock(),
+     getfox()
+    ]);  
+
+  return stockdata+"\n"+coinprice+'\n'+foxdata;  
    
 }
 
@@ -200,49 +225,32 @@ async function getfox(){
       ]
     } 
   ]
-  let foxtext=''
-  for(let i=0;i<foxarr.length;i++){
-     const res=await axios({
+
+
+  const foxPromises=foxarr.map(fox=>{
+      return axios({
         method: 'get',
-        url: foxurl+foxarr[i].url,
-        
+        url: foxurl+fox.url,
         headers: {
           'Content-Type': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0",
-        } 
-      
+          'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0',
+      }}).then((res) => {
+        const resjosn=res.data.rates
+        let str=''
+        for(let j=0;j<fox['arr'].length;j++){
+          str+=fox['arr'][j].name+':'+resjosn[fox['arr'][j].val]+','
+       }
+        
+        return str;
     })
-    const resjosn=res.data.rates
-   // console.log(resjosn)
-    for(let j=0;j<foxarr[i]['arr'].length;j++){
-       const str=foxarr[i]['arr'][j].name+':'+resjosn[foxarr[i]['arr'][j].val]+','
-       foxtext=foxtext+str
-    }
-  }
- // console.log(foxtext)
-  return foxtext
+
+  })
+
+  return Promise.all(foxPromises).then((foxprices) => {
+    return foxprices.join(''); // Join the prices into a single string
+});
 }
-function getWindDirection(angle) {
-    if (angle >= 337.5 || angle < 22.5) {
-        return "北风";
-    } else if (angle >= 22.5 && angle < 67.5) {
-        return "东北风";
-    } else if (angle >= 67.5 && angle < 112.5) {
-        return "东风";
-    } else if (angle >= 112.5 && angle < 157.5) {
-        return "东南风";
-    } else if (angle >= 157.5 && angle < 202.5) {
-        return "南风";
-    } else if (angle >= 202.5 && angle < 247.5) {
-        return "西南风";
-    } else if (angle >= 247.5 && angle < 292.5) {
-        return "西风";
-    } else if (angle >= 292.5 && angle < 337.5) {
-        return "西北风";
-    } else {
-        return "未知风向";
-    }
-}
+
 
 
 
