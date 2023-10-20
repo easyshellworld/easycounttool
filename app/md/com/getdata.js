@@ -109,7 +109,7 @@ exports.getdata=async function(){
      getfox()
     ]);  
 
-  return stockdata+"\n"+coinprice+'\n'+foxdata;  
+  return stockdata+coinprice+foxdata;  
    
 }
 
