@@ -3,6 +3,7 @@ import { useState } from "react"
 
 import {getdata,getodaydate,supa,toweek,decrypt,getweather,newsupa,newsupabase} from './com/getdata'
 
+import {newsloarToLunar} from './com/sloarToLunar'
 
 
 
@@ -73,12 +74,14 @@ export default function Newmarkdown() {
     const price=await getdata() */
     const date=getodaydate()
     const weekday=toweek()
+    const todaysloarToLunar=newsloarToLunar()
     const template=decrypt(mysupadata,word)
     const formattedTemplate = template
         .replace('$(price)', price)
         .replace('$(date)', date)
         .replace('$(day)',weekday)
         .replace('$(weather)',myweather)
+        .replace('$(lunar)',todaysloarToLunar)
     setnewdata(formattedTemplate)
    
     } catch (error) {
