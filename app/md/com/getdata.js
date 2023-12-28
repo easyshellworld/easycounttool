@@ -35,7 +35,7 @@ exports.getweather=async (key)=>{
         return "未知风向";
     }
 }
-  const n='9a5710f6fbf652e1a85e5963b178e67f34091c4a101e0c24ae01e04f3de2b982c8ebd6e975e0b1ed4c071203e7c1ccb665ce81b72aee3f2ef29b9d47f7398e06';
+  const n='9a5710f6fbf652e1a85e5963b178e67f9dfe9a43ba068812b8e754e86ae7f32c550e90634201d3f66b4981dbed2e534a165b93d4b74f3f4ebf529c173854d6278650688c7184472629dddc5c747bdc33';
   const weburl=exports.decrypt(n,key)
   const res=await axios({
     method: 'get',
